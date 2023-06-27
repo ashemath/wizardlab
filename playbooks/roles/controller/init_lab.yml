@@ -1,0 +1,25 @@
+---
+- name: initialize configuration management key
+  hosts: control
+  remote_user: vagrant
+
+  tasks:
+  - name: Remove old lab key
+    ansible.builtin.file:
+      path: /home/vagrant/.ssh/id_rsa_lab
+      state: absent
+
+  - name: Remove old lab public key
+    ansible.builtin.file:
+      path: /home/vagrant/.ssh/id_rsa_lab.pub 
+      state: absent
+
+  - name: generate a new lab key
+    ansible.builtin.shell: "ssh-keygen -t rsa -C 'lab@control' -N '' -f '/home/vagrant/.ssh/id_rsa_lab'"
+
+  - name: Copy the new lab key to services host
+    ansible.builtin.shell: "sshpass -p vagrant ssh-copy-id -i ~/.ssh/id_rsa_lab services"
+
+  - name: Copy the new lab key to client host
+    ansible.builtin.shell: "sshpass -p vagrant ssh-copy-id -i ~/.ssh/id_rsa_lab client"
+  

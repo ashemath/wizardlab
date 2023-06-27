@@ -1,0 +1,17 @@
+Host *
+  StrictHostkeyChecking no
+
+Host control
+  Hostname 192.168.56.2
+  User vagrant
+  IdentityFile /home/vagrant/.ssh/id_rsa
+
+Host services
+  Hostname 192.168.56.3
+  User vagrant
+  IdentityFile /home/vagrant/.ssh/id_rsa_lab
+
+Host client
+  Hostname 192.168.56.4
+  User vagrant
+  IdentityFile /home/vagrant/.ssh/id_rsa_lab

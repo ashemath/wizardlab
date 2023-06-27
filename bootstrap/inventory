@@ -1,0 +1,8 @@
+[controllers]
+control
+
+[infra]
+services
+
+[clients]
+client
