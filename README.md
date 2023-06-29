@@ -1,4 +1,6 @@
 # Wizard Lab
+[github.com/ashemath/wizardlab](https://www.github.com/ashemath/wizardlab)
+
 *This project is under development, and designed only
 for training and testing purposes.*
 Multi-Machine training environment Vagrantfile
@@ -32,10 +34,10 @@ in a Python virtual environment at /home/vagrant/ansible
 ## Getting Started
 ### Install NFS Server
 To use the default folder sync, you will need to install NFS.
-`
+```
 $ sudo apt update
 $ sudo apt install -y nfs-kernel-server
-`
+```
 Vagrant will manage the NFS exports for you, but you will need to be prepared to enter
 your sudo credentials when it goes to mount the shares. The shares are networked 
 over the host-only interface that the VMs share with your host environment.
@@ -43,10 +45,10 @@ over the host-only interface that the VMs share with your host environment.
 ### Install Git if needed:
 
 ### Clone this repo with GIT
-`
+```
 $ git clone https://github.com/ashemath/wizardlab.git
 $ cd wizardlab
-`
+```
 
 ### Start up the machine
 `
@@ -63,11 +65,11 @@ directory, yet stay separate from you virtual machine's directory structure.
 
 The included Makefile will help you execute an ansible playbook that distributes a fresh
 SSH key to all the 'lab' hosts.
-`
+```
 $ source ~/ansible/bin/activate
 (ansible)$ cd /vagrant
 (ansible)$ make lab
-`
+```
 ## What to do next?
 This project sets you up with a sensible, yet beefy, baseline environment to start playing with
 ansible.
