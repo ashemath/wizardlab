@@ -53,7 +53,6 @@ $ cd wizardlab
 ### Start up the machine
 `
 $ vagrant up
-$ 
 `
 ### Connect to Control
 `
