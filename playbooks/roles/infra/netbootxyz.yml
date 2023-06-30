@@ -1,0 +1,25 @@
+---
+- name: Deploy netboot.xyz to services
+  hosts: services
+  become: true
+
+  tasks:
+    - name: install dependencies
+      ansible.builtin.apt:
+        pkg:
+        - ansible 
+        - git 
+        - apache2
+    - name: clear out the directory
+      ansible.builtin.file:
+        path: /opt/netboot.xyz
+        state: absent
+    - name: Clone the netboot.xyz repository
+      ansible.builtin.shell:
+        cmd: "git clone \
+          https://github.com/netbootxyz/netboot.xyz.git /opt/netboot.xyz"
+    - name: run the configuration playbook
+      ansible.builtin.shell: 
+        cmd: "ansible-playbook -i -b inventory /opt/netboot.xyz/site.yml \
+          2>>$1 netboot.xyz.log"
+        chdir: /opt/netboot.xyz
