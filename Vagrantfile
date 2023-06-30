@@ -28,7 +28,7 @@ Vagrant.configure("2") do |config|
       sh /vagrant/bootstrap/install_xfce.sh
     SHELL
     control.vm.provision "shell", privileged: false, inline: <<-SHELL
-      cp /vagrant/playbooks/roles/controller/files/config.ssh ~/.ssh/config
+      cp /vagrant/playbooks/roles/infra/files/config.ssh ~/.ssh/config
       sh /vagrant/bootstrap/setup_ansible.sh
       cp /vagrant/Makefile /home/vagrant/
       cp -r /vagrant/playbooks /home/vagrant/playbooks
