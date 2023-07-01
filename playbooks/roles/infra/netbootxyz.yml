@@ -11,11 +11,11 @@
     - name: copy dhcpd.conf
       ansible.builtin.copy:
         src: "{{ playbook_dir }}/files/etc_defaults_isc-dhcp-server"
-        dest: "/etc/defaults/isc-dhcp-server"
+        dest: "/etc/default/isc-dhcp-server"
     - name: copy dhcpd.conf
       ansible.builtin.copy:
         src: "{{ playbook_dir }}/files/etc_defaults_tftp-hpa"
-        dest: "/etc/defaults/tftpd-hpa"
+        dest: "/etc/default/tftpd-hpa"
     - name: install dependencies
       ansible.builtin.apt:
         pkg:
