@@ -19,7 +19,3 @@
 
   - name: Copy the new lab key to services host
     ansible.builtin.shell: "sshpass -p vagrant ssh-copy-id -i ~/.ssh/id_rsa_lab services"
-
-  - name: Copy the new lab key to client host
-    ansible.builtin.shell: "sshpass -p vagrant ssh-copy-id -i ~/.ssh/id_rsa_lab client"
-  
