@@ -65,7 +65,7 @@ Vagrant.configure("2") do |config|
    end
 
   # Target machine
-  config.vm.define "client", autostart: "false" do |client|
+  config.vm.define "client", autostart: false do |client|
     client.vm.boot_timeout = 3600
     client.vm.network :private_network,
       libvirt__network_name: "wizardlab0"
