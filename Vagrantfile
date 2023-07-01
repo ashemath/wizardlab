@@ -11,8 +11,10 @@ Vagrant.configure("2") do |config|
   # Folder sync configuration
   # Control\Devel VM without optional GUI installed
   config.vm.define "control" do |control|
-    control.vm.network :private_network, ip: "192.168.56.2", netmask: "255.255.255.0",
-      auto_config: "false"
+    control.vm.network :private_network,
+      ip: "192.168.56.2",
+      libvirt__network_name: "wizardlab0",
+      libvirt__dhcp_enabled: false
     control.vm.provider :libvirt do |v|
       v.nested = true
       v.channel :type => 'unix', :target_type => 'virtio', :target_name => 'org.qemu.guest_agent.0'
@@ -44,8 +46,11 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define "services" do |services|
-    services.vm.network :private_network, ip: "192.168.56.3", netmask: "255.255.255.0",
-      auto_config: "false"
+    services.vm.network :private_network,
+      ip: "192.168.56.3",
+      libvirt__network_name: "wizardlab0",
+      libvirt__dhcp_enabled: "false"
+
     services.vm.provider :libvirt do |v|
       v.nested = true
       v.channel :type => 'unix', :target_type => 'virtio', :target_name => 'org.qemu.guest_agent.0'
@@ -60,13 +65,18 @@ Vagrant.configure("2") do |config|
    end
 
   # Target machine
-  config.vm.define "client" do |client|
-    client.vm.network :private_network, ip: "192.168.56.4", netmask: "255.255.255.0",
-      auto_config: "false"
+  config.vm.define "client", autostart: "false" do |client|
+    client.vm.boot_timeout = 3600
+    client.vm.network :private_network,
+      libvirt__network_name: "wizardlab0"
     client.vm.provider :libvirt do |v|
       v.channel :type => 'unix', :target_type => 'virtio', :target_name => 'org.qemu.guest_agent.0'
       v.memory = 2048
       v.cpus = 2
+      v.loader = "/usr/share/edk2/ovmf/OVMF_CODE.fd"
+      boot_network = {'network' => 'wizardlab0'}
+      v.boot boot_network
+      v.boot 'hd'
     end
     client.vm.provision "shell", inline: <<-SHELL
         hostnamectl set-hostname client;

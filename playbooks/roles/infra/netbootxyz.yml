@@ -4,12 +4,26 @@
   become: true
 
   tasks:
+    - name: copy dhcpd.conf
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/files/dhcpd.conf"
+        dest: "/etc/dhcp/dhcpd.conf"
+    - name: copy dhcpd.conf
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/files/etc_defaults_isc-dhcp-server"
+        dest: "/etc/defaults/isc-dhcp-server"
+    - name: copy dhcpd.conf
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/files/etc_defaults_tftp-hpa"
+        dest: "/etc/defaults/tftpd-hpa"
     - name: install dependencies
       ansible.builtin.apt:
         pkg:
         - ansible 
         - git 
         - apache2
+        - isc-dhcp-server
+        - tftpd-hpa
     - name: clear out the directory
       ansible.builtin.file:
         path: /opt/netboot.xyz
@@ -20,6 +34,9 @@
           https://github.com/netbootxyz/netboot.xyz.git /opt/netboot.xyz"
     - name: run the configuration playbook
       ansible.builtin.shell: 
-        cmd: "ansible-playbook -i -b inventory /opt/netboot.xyz/site.yml \
-          2>>$1 netboot.xyz.log"
+        cmd: "ansible-playbook -b -i inventory /opt/netboot.xyz/site.yml"
         chdir: /opt/netboot.xyz
+    - name: download the .efi
+      ansible.builtin.shell:
+        cmd: "wget https://boot.netboot.xyz/ipxe/netboot.xyz.efi && systemctl restart tftpd-hpa"
+        chdir:  /srv/tftp/
