@@ -54,11 +54,11 @@ Playbooks for Services are under [playbooks/roles/infra](playbooks/roles/control
 TFTP, DHCP, and a configured self-hosted install of netboot.xyz.
 For example: Bring up the Client machine
 ```
-vagrant ssh controller
-make pxe
+$ vagrant ssh controller
+$ make pxe
 ```
 
-Next, boot up Client:
+Next, boot up the Client VM on your Host:
 ```
 vagrant up client
 ```
