@@ -42,13 +42,13 @@ for the purpose of testing usability and integrating your work into your "produc
 Please comment out the line with bootstrap/install_xfce.sh from the Vagrantfile if you
 do not want the GUI.
 
-Playbooks for Control are located under [playbooks/controller/](playbooks/controller/)
+Playbooks for Control are located under [playbooks/roles/controller/](playbooks/roles/controller/)
 
 ### Services
 The services VM is a target for infrastructure configuration. Think of it as a blank slate
 for you to test configuration against. Service knows about controller by its `/etc/hosts`
 
-Playbooks for Services are under [playbooks/infra](playbooks/controller)
+Playbooks for Services are under [playbooks/roles/infra](playbooks/roles/controller)
 
 ##PXE 
 TFTP, DHCP, and a configured self-hosted install of netboot.xyz.
