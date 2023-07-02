@@ -50,7 +50,7 @@ for you to test configuration against. Service knows about controller by its `/e
 
 Playbooks for Services are under [playbooks/roles/infra](playbooks/roles/controller)
 
-##PXE 
+## PXE 
 TFTP, DHCP, and a configured self-hosted install of netboot.xyz.
 For example: Bring up the Client machine
 ```
@@ -93,7 +93,7 @@ Follow the instructions for your Host OS on this page:
 
 Install the vagrant-libvirtd plugin:
 ```
-vagrant plugin install vagrant-libvirt
+$ vagrant plugin install vagrant-libvirt
 ```
 ### Install NFS Server
 To use the default folder sync, you will need to install NFS.
@@ -136,9 +136,10 @@ $ make keys
 This project sets you up with a sensible, yet beefy, baseline environment to start playing with
 ansible.
 After running `make keys`, you can execute this, for example:
-`source ansible/bin/activate
+```
+source ansible/bin/activate
 (ansible)$ ansible all -i inventory -m ping
-`
+```
 Since the `vagrant` user has password-free sudo access on the VMs, your playbooks should be able
 to elevate privileges with the 'become' option, without entering a password. You should have name resolution working via entries in `/etc/hosts`.
 
