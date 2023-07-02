@@ -9,7 +9,7 @@ Multi-Machine training environment Vagrantfile
 - Debian Bookworm featuring an XFCE4 desktop 
 - Control: 2 CPU, 2GB ram, 20GB Virtual Disk
 - Service: 4 CPU, 4GB ram, 20GB Virtual Disk
-- Client: 2 CPU, 1 GB ram, EFI Boot Client
+- Client: 2 CPU, 2 GB ram, 20GB VIrtual Disk, EFI Boot Client
 
 ## Requirements
 - Linux OS (Need to test on Windows)
@@ -18,7 +18,7 @@ Multi-Machine training environment Vagrantfile
 - Minimum 4 core system for good performance.
 - Tested on Debian, Ubuntu, and Fedora systems.
 - Up to 8GB of RAM (16GB system RAM recommended)
-- Up to 40 GB Storage
+- Minimum 30GB storage (Up to 60GB depending on usage).
 
 ## Networking
 Depending on how your are using Virtualbox or Libvirt,
@@ -26,9 +26,9 @@ the Virtual NIC Vagrant uses to provision hosts may vary, but
 this file sets up a secondary network adapter on each machine that
 sits on the network 192.168.56.0/24
 
-Control: 192.168.56.2
-Service: 192.168.56.3
-Client: 192.168.56.4
+- Control: 192.168.56.2
+- Service: 192.168.56.3
+- Client: 192.168.56.4
 
 ## Architecture
 The project is designed to be a flexible place to setup a fresh environment and test out
@@ -156,16 +156,12 @@ By using VM Snapshots, you can build a catalog of scenarios that you can reuse t
 new strategies in System Administration with Ansible. 
 
 ### Client
-- Install either Debian or CentOS from PXE
-- Managed sudo
-- Network /home/${USER}
+- Networked `/home/${USER}`
 - Network shares for data-sets
 - Configure VPN Acccess
 
 ### Service
 - NFS: Shared storage between "Service" and "Client"
-- DHCP: Configure "Client" networking options with isc-dhcp or kea (TBD)
-- TFTP: Serve the network files necessary to boot with PXE
 - DNS: Bind (Authoritative DNS) and Unbound (Recursive DNS Lookup)
 - LDAP: Identity Management with FreeIPA
 - VPN: Access your 'client' or 'control' host through a OpenVPN server

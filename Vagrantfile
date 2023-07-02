@@ -27,7 +27,7 @@ Vagrant.configure("2") do |config|
       echo "Installing Dependencies on the Controller"
       hostnamectl set-hostname control;
       apt install -y make sshpass python3-venv python3-dev;
-      sh /vagrant/bootstrap/install_xfce.sh
+      #sh /vagrant/bootstrap/install_xfce.sh
     SHELL
     control.vm.provision "shell", privileged: false, inline: <<-SHELL
       cp /vagrant/playbooks/roles/infra/files/config.ssh ~/.ssh/config
@@ -73,6 +73,11 @@ Vagrant.configure("2") do |config|
       v.channel :type => 'unix', :target_type => 'virtio', :target_name => 'org.qemu.guest_agent.0'
       v.memory = 2048
       v.cpus = 2
+      v.storage :file,
+        size: '20G',
+        type: 'qcow2',
+        bus: 'sata',
+        device: 'sda'
       v.loader = "/usr/share/edk2/ovmf/OVMF_CODE.fd"
       boot_network = {'network' => 'wizardlab0'}
       v.boot boot_network
