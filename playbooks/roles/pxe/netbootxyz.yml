@@ -1,18 +1,10 @@
 ---
 - name: Deploy netboot.xyz to services
-  hosts: services
+  hosts: pxe
   become: true
 
   tasks:
-    - name: copy dhcpd.conf
-      ansible.builtin.copy:
-        src: "{{ playbook_dir }}/files/dhcpd.conf"
-        dest: "/etc/dhcp/dhcpd.conf"
-    - name: copy dhcpd.conf
-      ansible.builtin.copy:
-        src: "{{ playbook_dir }}/files/etc_defaults_isc-dhcp-server"
-        dest: "/etc/default/isc-dhcp-server"
-    - name: copy dhcpd.conf
+    - name: copy tftp defaults
       ansible.builtin.copy:
         src: "{{ playbook_dir }}/files/etc_defaults_tftp-hpa"
         dest: "/etc/default/tftpd-hpa"
@@ -22,7 +14,6 @@
         - ansible 
         - git 
         - apache2
-        - isc-dhcp-server
         - tftpd-hpa
     - name: clear out the directory
       ansible.builtin.file:
@@ -38,5 +29,6 @@
         chdir: /opt/netboot.xyz
     - name: download the .efi
       ansible.builtin.shell:
-        cmd: "wget https://boot.netboot.xyz/ipxe/netboot.xyz.efi && systemctl restart tftpd-hpa"
+        cmd: "wget https://boot.netboot.xyz/ipxe/netboot.xyz.efi 
+          && systemctl restart tftpd-hpa"
         chdir:  /srv/tftp/

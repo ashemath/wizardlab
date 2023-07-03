@@ -14,7 +14,7 @@ Vagrant.configure("2") do |config|
     control.vm.network :private_network,
       ip: "192.168.56.2",
       libvirt__network_name: "wizardlab0",
-      libvirt__dhcp_enabled: false
+      libvirt__dhcp_enabled: "false"
     control.vm.provider :libvirt do |v|
       v.nested = true
       v.channel :type => 'unix', :target_type => 'virtio', :target_name => 'org.qemu.guest_agent.0'
@@ -34,15 +34,15 @@ Vagrant.configure("2") do |config|
       sh /vagrant/bootstrap/setup_ansible.sh
       cp /vagrant/Makefile /home/vagrant/
       cp -r /vagrant/playbooks /home/vagrant/playbooks
-      cp /vagrant/bootstrap/inventory /home/vagrant/inventory
+      cp /vagrant/inventory /home/vagrant/inventory
       ssh-keygen -t rsa -C 'localhost' -N '' -f /home/vagrant/.ssh/id_rsa
       cat /home/vagrant/.ssh/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys
-      sudo reboot
     SHELL
-    config.trigger.after [:provision] do |t|
-      t.name = "Reboot after provisioning"
-      t.run = { :inline => "vagrant reload" }
-    end
+    # Uncomment below to reload Control after provisioning
+    #config.trigger.after [:provision] do |t|
+    #  t.name = "Reboot after provisioning"
+    #  t.run = { :inline => "vagrant reload" }
+    #end
   end
 
   config.vm.define "services" do |services|

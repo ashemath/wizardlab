@@ -91,21 +91,11 @@ irqbypass              16384  21 kvm
 Follow the instructions for your Host OS on this page:
 [developer.hashicorp.com/vagrant/downloads](https://developer.hashicorp.com/vagrant/downloads)
 
-Install the vagrant-libvirtd plugin:
+Install the vagrant-libvirtd and vagrant-sshfs plugin:
 ```
 $ vagrant plugin install vagrant-libvirt
+$ vagrant plugin install vagrant-sshfs
 ```
-### Install NFS Server
-To use the default folder sync, you will need to install NFS.
-For Debian/Ubuntu:
-```
-$ sudo apt update
-$ sudo apt install -y nfs-kernel-server
-```
-For Fedora/RHEL-based:
-Vagrant will manage the NFS exports for you, but you will need to be prepared to enter
-your sudo credentials when it goes to mount the shares. The shares are networked 
-over the host-only interface that the VMs share with your host environment.
 
 ### Install Git if needed:
 
