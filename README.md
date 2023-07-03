@@ -91,10 +91,9 @@ irqbypass              16384  21 kvm
 Follow the instructions for your Host OS on this page:
 [developer.hashicorp.com/vagrant/downloads](https://developer.hashicorp.com/vagrant/downloads)
 
-Install the vagrant-libvirtd and vagrant-sshfs plugin:
+Install the vagrant-libvirtd plugin:
 ```
 $ vagrant plugin install vagrant-libvirt
-$ vagrant plugin install vagrant-sshfs
 ```
 
 ### Install Git if needed:
