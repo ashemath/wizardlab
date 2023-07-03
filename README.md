@@ -63,7 +63,7 @@ Next, boot up the Client VM on your Host:
 vagrant up client
 ```
 The Client machine is configured to PXE boot, so it will hang on step where it tries to inject
-the SSH key. It will be trying to PXE boot. Open up `virt-manager` and try out the menu.
+the SSH key. It will be trying to PXE boot. Open up `virt-manager` and try out the netboot.xyz menus.
 
 If you got the menu working, try setting up a beefier virtual machine from scratch on the 'wizardlab' virtual network.
 
