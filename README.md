@@ -47,6 +47,8 @@ Playbooks for Control are located under [playbooks/roles/controller/](playbooks/
 ### Services
 The services VM is a target for infrastructure configuration. Think of it as a blank slate
 for you to test configuration against. Service knows about controller by its `/etc/hosts`
+*In development*: Samba share for WDS at /srv/wds 
+For a WDS server living at 192.168.56.4
 
 Playbooks for Services are under [playbooks/roles/infra](playbooks/roles/controller)
 

@@ -78,7 +78,10 @@ Vagrant.configure("2") do |config|
         type: 'qcow2',
         bus: 'sata',
         device: 'sda'
-      v.loader = "/usr/share/edk2/ovmf/OVMF_CODE.fd"
+      # For redhat: path with edk2
+      #v.loader = "/usr/share/edk2/ovmf/OVMF_CODE.fd"
+      # For Ubuntu\Debian
+      v.loader = "/usr/share/ovmf/OVMF.fd"
       boot_network = {'network' => 'wizardlab0'}
       v.boot boot_network
       v.boot 'hd'
