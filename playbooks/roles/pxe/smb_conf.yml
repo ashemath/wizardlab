@@ -1,0 +1,26 @@
+---
+- name: Create "Distribution Share" for Windows Deployment Services
+  hosts: pxe
+  become: true
+
+  tasks:
+  - name: Create the distribution share directory
+    ansible.builtin.file:
+      path: /srv/wds/
+      mode: 0775
+      owner: root
+      group: root
+  - name: Deploy smb.conf
+    ansible.builtin.copy:
+      src: "{{ playbook_dir }}/files/smb.conf"
+      dest: "/etc/samba/smb.conf"
+  - name: Install Samba and CIFS tools
+    ansible.builtin.apt:
+      pkg:
+      - samba
+      - smbclient
+      - cifs-utils
+  - name: Reload Samba services
+    ansible.builtin.service:
+      name: smb
+      state: restarted
