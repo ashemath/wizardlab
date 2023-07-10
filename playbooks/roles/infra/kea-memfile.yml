@@ -1,0 +1,29 @@
+---
+- name: Install and configure Kea from distribution package manager.
+  hosts: services
+
+  tasks:
+  - name: Ensure Kea configuration is cleared out
+    ansible.builtin.file:
+      path: /etc/kea/*
+      state: absent
+  - name: Copy over configuration files
+    ansible.builtin.copy:
+      src: '{{ playbook_dir }}/files/kea-memfile'
+      dest: '/etc/kea/'
+  - name: download kea repo setup script
+    ansible.builtin.get_url:
+      url: 'https://dl.cloudsmith.io/public/isc/kea-2-4/setup.deb.sh'
+      dest: './setup.deb.sh'
+      mode: '0700'
+  - name: execute script to setup the kea repo
+    ansible.builtin.shell:
+      cmd: 'sudo apt install -y curl && ./setup.deb.sh'
+  - name: install isc-kea
+    ansible.builtin.apt:
+      pkg:
+        - isc-kea
+  - name: Restart kea-dhcp-server
+    ansible.builtin.service:
+      name: isc-kea-dhcp4-server
+      state: restarted
