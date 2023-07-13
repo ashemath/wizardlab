@@ -1,0 +1,41 @@
+---
+- name: configure debian PXE boot files
+  hosts: services
+  become: true
+  vars:
+    next_server_file: "/srv/tftp/grubx64.efi"
+
+  tasks:
+    - name: download  debian  netboot
+      ansible.builtin.get_url:
+        url: "https://deb.debian.org/debian/dists/bookworm/main/installer-amd64\
+          /current/images/netboot/netboot.tar.gz"
+        dest: "~"
+    - name: extract the boot files
+      ansible.builtin.shell: 
+        cmd: "tar -xvf ~/netboot.tar.gz -C /srv/tftp/"
+        chdir:  "~"
+    - name: Configure dhcp.conf
+      ansible.builtin.template:
+        src: "{{ playbook_dir }}/templates/pxe_dhcpd.conf.j2"
+        dest: "/etc/dhcp/dhcpd.conf"
+    - name: symlink grubx64.efi
+      ansible.builtin.file:
+        src: "/srv/tftp/debian-installer/amd64/grubx64.efi"
+        dest: "/srv/tftp/grubx64.efi"
+        state: link
+    - name: symlink grubx64.efi
+      ansible.builtin.file:
+        src: "/srv/tftp/debian-installer/amd64/grub"
+        dest: "/srv/tftp/grub"
+        state: link
+    - name: restart PXE services
+      ansible.builtin.service:
+        name: tftpd-hpa
+        state: restarted
+    - name: restart PXE services
+      ansible.builtin.service:
+        name: isc-dhcp-server
+        state: restarted
+
+

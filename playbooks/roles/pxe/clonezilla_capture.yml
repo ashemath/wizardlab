@@ -1,0 +1,25 @@
+---
+- name: Deploy windows with Clonezilla
+  hosts: services
+  become: true
+  vars:
+    stop_services:
+      - isc-dhcp-server.service
+
+  tasks:
+  - service_facts:
+
+  - name: disable dhcp if it is configured.
+    ansible.builtin.service:
+      name: "{{ item }}"
+      state: stopped
+      eenabled: false
+    when: "item in service_names"
+    loop: "{{ stop_services }}"
+    vars:
+      service_names: "{{ services|dict2items|map(attribute='value.name')|list }}"
+  - name: install clonezilla
+    ansible.builtin.apt:
+      pkg: 
+        - clonezilla
+

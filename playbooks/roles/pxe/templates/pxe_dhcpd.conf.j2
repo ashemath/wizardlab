@@ -33,5 +33,5 @@ subnet {{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['network'] }} net
   option broadcast-address {{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['broadcast'] }};
   option domain-name-servers {{ dns }};
   next-server {{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['address'] }};
-  filename "/srv/tftp/netboot.xyz.efi";
+  filename "{{ next_server_file }}";
 }

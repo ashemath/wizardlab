@@ -2,6 +2,8 @@
 - name: Configure ISC DHCP Server for netboot.xyz
   hosts: pxe
   become: true
+  vars:
+    next_server_file: "/srv/tftp/netboot.xyz.efi"
 
   tasks:
     - name: Deploying dhcpd.conf for PXE

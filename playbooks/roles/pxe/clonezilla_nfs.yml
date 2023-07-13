@@ -1,0 +1,25 @@
+---
+- name: Install NFS mount for Clonezilla Server to stash image files.
+  hosts: services
+  become: true
+
+  tasks:
+   - name: install nfs server 
+     ansible.builtin.apt:
+       pkg:
+       - nfs-kernel-server
+   - name: Ensure that a /srv/clonezilla/ directory exists
+     ansible.builtin.file:
+       path: '/srv/clonezilla/'
+       state: directory
+       mode: 0744
+   - name: Add relevant nfs configuration.
+     ansible.builtin.lineinfile:
+       path: '/etc/exports'
+       line: '/srv/clonezilla \
+         192.168.56.0/24(rw,sync,no_root_squash,no_subtree_check)'
+       create: yes
+   - name: Restart the nfs service
+     ansible.builtin.service:
+       name: nfs-kernel-server
+       state: restarted
