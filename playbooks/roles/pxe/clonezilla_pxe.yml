@@ -3,15 +3,29 @@
   hosts: services
   become: true
   vars:
-    next_server_file: "/srv/tftp/grubx64.efi"
+    next_server_file: "debian-installer/amd64/bootnetx64.efi"
 
   tasks:
-    - name: download  debian  netboot
+    - name: install packages
+      ansible.builtin.apt:
+        pkg:
+          - zip
+          - isc-dhcp-server
+          - tftpd-hpa
+    - name: Copy over service defaults
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/files/etc_default_tftpd-hpa"
+        dest: "/etc/default/"
+    - name: Copy over service defaults
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/files/etc_default_isc-dhcp-server"
+        dest: "/etc/default/"
+    - name: download debian netboot
       ansible.builtin.get_url:
         url: "https://deb.debian.org/debian/dists/bookworm/main/installer-amd64\
           /current/images/netboot/netboot.tar.gz"
         dest: "~"
-    - name: extract the boot files
+    - name: extract the debian boot files
       ansible.builtin.shell: 
         cmd: "tar -xvf ~/netboot.tar.gz -C /srv/tftp/"
         chdir:  "~"
@@ -29,6 +43,14 @@
         src: "/srv/tftp/debian-installer/amd64/grub"
         dest: "/srv/tftp/grub"
         state: link
+    - name: unpack Clonezilla files
+      ansible.builtin.shell:
+        cmd: "unzip -oj /vagrant/clonezilla-live-*.zip live/vmlinuz live/initrd.img \ 
+          live/filesystem.squashfs -d /srv/tftp/live/"
+    - name: Configure grub.cfg
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/files/srv_tftp_grub_grub.cfg"
+        dest: "/srv/tftp/grub/grub.cfg"
     - name: restart PXE services
       ansible.builtin.service:
         name: tftpd-hpa
@@ -37,5 +59,3 @@
       ansible.builtin.service:
         name: isc-dhcp-server
         state: restarted
-
-

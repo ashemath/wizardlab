@@ -9,7 +9,7 @@ Vagrant.configure("2") do |config|
   # Bookworm 64-bit, official box
   config.vm.box = "debian/bookworm64"
   # Folder sync configuration
-  # Control\Devel VM without optional GUI installed
+  # Ansible configuration management development VM
   config.vm.define "control" do |control|
     control.vm.network :private_network,
       ip: "192.168.56.2",
@@ -27,7 +27,6 @@ Vagrant.configure("2") do |config|
       echo "Installing Dependencies on the Controller"
       hostnamectl set-hostname control;
       apt install -y make sshpass python3-venv python3-dev;
-      #sh /vagrant/bootstrap/install_xfce.sh
     SHELL
     control.vm.provision "shell", privileged: false, inline: <<-SHELL
       cp /vagrant/playbooks/roles/infra/files/config.ssh ~/.ssh/config
@@ -38,11 +37,6 @@ Vagrant.configure("2") do |config|
       ssh-keygen -t rsa -C 'localhost' -N '' -f /home/vagrant/.ssh/id_rsa
       cat /home/vagrant/.ssh/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys
     SHELL
-    # Uncomment below to reload Control after provisioning
-    #config.trigger.after [:provision] do |t|
-    #  t.name = "Reboot after provisioning"
-    #  t.run = { :inline => "vagrant reload" }
-    #end
   end
 
   config.vm.define "services" do |services|
@@ -73,11 +67,6 @@ Vagrant.configure("2") do |config|
       v.channel :type => 'unix', :target_type => 'virtio', :target_name => 'org.qemu.guest_agent.0'
       v.memory = 2048
       v.cpus = 2
-      v.storage :file,
-        size: '20G',
-        type: 'qcow2',
-        bus: 'sata',
-        device: 'sda'
       # For redhat: path with edk2
       #v.loader = "/usr/share/edk2/ovmf/OVMF_CODE.fd"
       # For Ubuntu\Debian

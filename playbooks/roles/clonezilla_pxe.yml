@@ -1,0 +1,8 @@
+---
+- name: Deploy Debian PXE Server with Clonezilla-Live
+  hosts: services
+
+- name: Deploy ISC DHCP Server with Next-Server option.
+  ansible.builtin.import_playbook: "{{ playbook_dir }}/pxe/clonezilla_nfs.yml"
+- name: Deploy netboot.xyz
+  ansible.builtin.import_playbook: "{{ playbook_dir }}/pxe/clonezilla_pxe.yml"

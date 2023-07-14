@@ -8,17 +8,16 @@
      ansible.builtin.apt:
        pkg:
        - nfs-kernel-server
-   - name: Ensure that a /srv/clonezilla/ directory exists
+   - name: Ensure that a /vagrant/clonezilla/ directory exists
      ansible.builtin.file:
-       path: '/srv/clonezilla/'
+       path: '/vagrant/clonezilla/'
        state: directory
-       mode: 0744
+       mode: 0777
    - name: Add relevant nfs configuration.
      ansible.builtin.lineinfile:
        path: '/etc/exports'
-       line: '/srv/clonezilla \
-         192.168.56.0/24(rw,sync,no_root_squash,no_subtree_check)'
-       create: yes
+       line: '/vagrant/clonezilla 192.168.56.0/24(rw,sync,no_root_squash,no_subtree_check)'
+       state: present
    - name: Restart the nfs service
      ansible.builtin.service:
        name: nfs-kernel-server
