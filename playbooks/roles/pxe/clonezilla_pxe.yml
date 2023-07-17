@@ -6,20 +6,18 @@
     next_server_file: "debian-installer/amd64/bootnetx64.efi"
 
   tasks:
-    - name: install packages
-      ansible.builtin.apt:
-        pkg:
-          - zip
-          - isc-dhcp-server
-          - tftpd-hpa
+    - name: remove isc-dhcp-defaults
+      ansible.builtin.file:
+        path: "/etc/default/isc-dhcp-server"
+        state: absent
     - name: Copy over service defaults
       ansible.builtin.copy:
         src: "{{ playbook_dir }}/files/etc_default_tftpd-hpa"
-        dest: "/etc/default/"
+        dest: "/etc/default/tftpd-hpa"
     - name: Copy over service defaults
       ansible.builtin.copy:
         src: "{{ playbook_dir }}/files/etc_default_isc-dhcp-server"
-        dest: "/etc/default/"
+        dest: "/etc/default/isc-dhcp-server"
     - name: download debian netboot
       ansible.builtin.get_url:
         url: "https://deb.debian.org/debian/dists/bookworm/main/installer-amd64\
@@ -33,6 +31,12 @@
       ansible.builtin.template:
         src: "{{ playbook_dir }}/templates/pxe_dhcpd.conf.j2"
         dest: "/etc/dhcp/dhcpd.conf"
+    - name: install packages
+      ansible.builtin.apt:
+        pkg:
+          - zip
+          - isc-dhcp-server
+          - tftpd-hpa
     - name: symlink grubx64.efi
       ansible.builtin.file:
         src: "/srv/tftp/debian-installer/amd64/grubx64.efi"

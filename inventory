@@ -13,3 +13,14 @@ pxe
 
 [pxe]
 services
+
+[windows]
+192.168.56.158
+[windows:vars]
+ansible_user="wizard"
+ansible_password="vagrant"
+ansible_connection="winrm"
+ansible_port=5985
+ansible_winrm_transport="ntlm"
+ansible_winrm_server_cert_validation=ignore
+ansible_winrm_scheme="http"
