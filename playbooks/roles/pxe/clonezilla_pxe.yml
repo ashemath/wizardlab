@@ -55,6 +55,10 @@
       ansible.builtin.copy:
         src: "{{ playbook_dir }}/files/srv_tftp_grub_grub.cfg"
         dest: "/srv/tftp/grub/grub.cfg"
+    - name: Configure clonezilla password script
+      ansible.builtin.template:
+        src: "{{ playbook_dir }}/templates/ocs_prerun.sh.j2"
+        dest: "/srv/tftp/live/ocs_prerun.sh"
     - name: restart PXE services
       ansible.builtin.service:
         name: tftpd-hpa
