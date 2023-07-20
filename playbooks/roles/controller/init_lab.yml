@@ -1,21 +1,27 @@
 ---
 - name: initialize configuration management key
-  hosts: control
-  remote_user: vagrant
+  hosts: controllers:services:clonezilla
 
   tasks:
   - name: Remove old lab key
     ansible.builtin.file:
       path: /home/vagrant/.ssh/id_rsa_lab
       state: absent
-
+    when: ansible_hostname == 'control'
   - name: Remove old lab public key
     ansible.builtin.file:
       path: /home/vagrant/.ssh/id_rsa_lab.pub 
       state: absent
-
+    when: ansible_hostname == 'control'
   - name: generate a new lab key
-    ansible.builtin.shell: "ssh-keygen -t rsa -C 'lab@control' -N '' -f '/home/vagrant/.ssh/id_rsa_lab'"
-
-  - name: Copy the new lab key to services host
-    ansible.builtin.shell: "sshpass -p vagrant ssh-copy-id -i ~/.ssh/id_rsa_lab services"
+    ansible.builtin.shell: "ssh-keygen -t rsa -C 'lab@control' -N '' -f '/home/{{ ansible_user }}/.ssh/id_rsa_lab'"
+    when: ansible_hostname == 'control'
+  - name: ensure a .ssh folder for user
+    ansible.builtin.file:
+      path: /home/{{ ansible_user }}/.ssh
+      state: directory
+    loop: "{{ play_hosts }}"
+  - name: Copy the new lab key to hosts
+    ansible.builtin.shell: "sshpass -p {{ ansible_password }} ssh-copy-id -i ~/.ssh/id_rsa_lab {{ ansible_user }}@{{ inventory_hostname }}"
+    when: ansible_hostname == 'control'
+    loop: "{{ play_hosts }}"

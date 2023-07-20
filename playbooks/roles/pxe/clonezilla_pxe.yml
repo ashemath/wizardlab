@@ -10,6 +10,10 @@
       ansible.builtin.file:
         path: "/etc/default/isc-dhcp-server"
         state: absent
+    - name: remove old dhcpd.conf
+      ansible.builtin.file:
+        path: /etc/dhcp/dhcpd.conf
+        state: absent
     - name: Copy over service defaults
       ansible.builtin.copy:
         src: "{{ playbook_dir }}/files/etc_default_tftpd-hpa"
@@ -23,6 +27,11 @@
         url: "https://deb.debian.org/debian/dists/bookworm/main/installer-amd64\
           /current/images/netboot/netboot.tar.gz"
         dest: "~"
+    - name: create tftp root
+      ansible.builtin.file:
+        path: "/srv/tftp"
+        mode: "0755"
+        state: directory
     - name: extract the debian boot files
       ansible.builtin.shell: 
         cmd: "tar -xvf ~/netboot.tar.gz -C /srv/tftp/"
@@ -55,10 +64,6 @@
       ansible.builtin.copy:
         src: "{{ playbook_dir }}/files/srv_tftp_grub_grub.cfg"
         dest: "/srv/tftp/grub/grub.cfg"
-    - name: Configure clonezilla password script
-      ansible.builtin.template:
-        src: "{{ playbook_dir }}/templates/ocs_prerun.sh.j2"
-        dest: "/srv/tftp/live/ocs_prerun.sh"
     - name: restart PXE services
       ansible.builtin.service:
         name: tftpd-hpa

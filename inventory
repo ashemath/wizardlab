@@ -5,17 +5,21 @@ control
 services dhcp_range='192.168.56.150 192.168.56.254'
 
 [infra:vars]
+ansible_user='vagrant'
+ansible_password='vagrant'
 dns='8.8.8.8'
 router='192.168.56.1'
 
 [infra:children]
 pxe
+controllers
 
 [pxe]
 services
 
+
 [windows]
-192.168.56.158
+
 [windows:vars]
 ansible_user="wizard"
 ansible_password="vagrant"
@@ -23,4 +27,11 @@ ansible_connection="winrm"
 ansible_port=5985
 ansible_winrm_transport="ntlm"
 ansible_winrm_server_cert_validation=ignore
-ansible_winrm_scheme="http"
+
+[clonezilla]
+192.168.56.11
+[clonezilla:vars]
+ansible_user="user"
+ansible_password="live"
+ansible_connection="ssh"
+
