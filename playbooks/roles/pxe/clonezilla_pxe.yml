@@ -1,6 +1,6 @@
 ---
 - name: configure debian PXE boot files
-  hosts: services
+  hosts: bridged
   become: true
   vars:
     next_server_file: "debian-installer/amd64/bootnetx64.efi"
@@ -60,9 +60,13 @@
       ansible.builtin.shell:
         cmd: "unzip -oj /vagrant/clonezilla-live-*.zip live/vmlinuz live/initrd.img \ 
           live/filesystem.squashfs -d /srv/tftp/live/"
-    - name: Configure grub.cfg
+    - name: copy custom files
       ansible.builtin.copy:
-        src: "{{ playbook_dir }}/files/srv_tftp_grub_grub.cfg"
+        src: "{{ playbook_dir }}/files/clonezilla/"
+        dest: "/srv/tftp/live/"
+    - name: Configure grub.cfg
+      ansible.builtin.template:
+        src: "{{ playbook_dir }}/templates/srv_tftp_grub_grub.cfg.j2"
         dest: "/srv/tftp/grub/grub.cfg"
     - name: restart PXE services
       ansible.builtin.service:

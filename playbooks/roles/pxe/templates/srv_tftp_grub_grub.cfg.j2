@@ -37,13 +37,13 @@ menuentry 'Install' {
 }
 menuentry "Clonezilla-live x64" {
   set gfxpayload=keep
-  linux /live/vmlinuz vga=788 video=800x600 vmwgfx.enable_fbdev=1 boot=live union=overlay username=user hostname=clonezilla ocs_live_extra_param="" locales=en_US.UTF-8 keyboard-layouts=NONE toram=filesystem.squashfs ocs_daemonon="ssh" ocs_repository="nfs://192.168.56.3/vagrant/clonezilla/" fetch=tftp://192.168.56.3/live/filesystem.squashfs
+  linux /live/vmlinuz vga=788 video=800x600 vmwgfx.enable_fbdev=1 boot=live union=overlay username=user hostname=clonezilla ocs_live_extra_param="" systemd.getty_auto=auto locales=en_US.UTF-8 keyboard-layouts=NONE toram=filesystem.squashfs ocs_daemonon="ssh" ocs_repository="nfs://{{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['address'] }}/vagrant/clonezilla/" fetch=tftp://{{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['address'] }}/live/filesystem.squashfs
   initrd /live/initrd.img
 }
 }
 menuentry "Clonezilla-live x64 Manual" {
   set gfxpayload=keep
-  linux /live/vmlinuz vga=788 video=800x600 vmwgfx.enable_fbdev=1 boot=live union=overlay username=user hostname=clonezilla ocs_live_run="ocs-live-general" ocs_live_extra_param="" ocs_live_batch="yes" locales=en_US.UTF-8 keyboard-layouts=NONE toram=filesystem.squashfs ocs_daemonon="ssh" ocs_repository="nfs://192.168.56.3/vagrant/clonezilla/" fetch=tftp://192.168.56.3/live/filesystem.squashfs
+  linux /live/vmlinuz vga=788 video=800x600 vmwgfx.enable_fbdev=1 boot=live union=overlay username=user hostname=clonezilla ocs_live_run="ocs-live-general" ocs_live_extra_param="" ocs_live_batch="yes" locales=en_US.UTF-8 keyboard-layouts=NONE toram=filesystem.squashfs ocs_daemonon="ssh" ocs_repository="nfs://{{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['address'] }}/vagrant/clonezilla/" fetch=tftp://{{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['address'] }}/live/filesystem.squashfs
   initrd /live/initrd.img
 }
 submenu --hotkey=a 'Advanced options ...' {
