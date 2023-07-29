@@ -1,0 +1,15 @@
+---
+- name: Specialize the newly imaged install
+  hosts: clonezilla
+
+  tasks:
+  - name: Expand the system partition.
+    ansible.builtin.script:  "{{ playbook_dir }}/files/post_img.sh"
+  - name: Mount the Windows partition
+    ansible.builtin.command: 
+      cmd: "sudo mount -t ntfs /dev/disk/by-label/Windows /mnt &&
+        cp /home/partimag/unattend.xml /mnt/Windows/Panther/Unattend.xml"
+  - name: Reboot
+    ansible.builtin.command:
+      cmd: "sudo shutdown 10"
+

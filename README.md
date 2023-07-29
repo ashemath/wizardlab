@@ -47,16 +47,18 @@ Playbooks for Control are located under [playbooks/roles/controller/](playbooks/
 ### Services
 The services VM is a target for infrastructure configuration. Think of it as a blank slate
 for you to test configuration against. Service knows about controller by its `/etc/hosts`
-*In development*: Samba share for WDS at /srv/wds 
-For a WDS server living at 192.168.56.4
 
-Playbooks for Services are under [playbooks/roles/infra](playbooks/roles/controller)
+Playbooks targeting the services VM are found throughout the playbooks, and many of the
+infrasture configurations are just variations on setting up the services VM.
 
 ## PXE 
+The PXE make target gives you a simple to setup PXE boot server that allows you to try
+out different unix-based operating systems.
 TFTP, DHCP, and a configured self-hosted install of netboot.xyz.
-For example: Bring up the Client machine
+For example:
 ```
-$ vagrant ssh controller
+$ vagrant ssh control
+$ make keys
 $ make pxe
 ```
 
@@ -68,6 +70,35 @@ The Client machine is configured to PXE boot, so it will hang on step where it t
 the SSH key. It will be trying to PXE boot. Open up `virt-manager` and try out the netboot.xyz menus.
 
 If you got the menu working, try setting up a beefier virtual machine from scratch on the 'wizardlab' virtual network.
+
+## Imaging
+The imaging environment gives you a Debian PXE boot server with a Clonezilla Live PXE
+environment added ontop of it. Place a customized initramfs into the 
+playbooks/roles/pxe/files/clonezilla/ directory if you want to go down the road of building
+a customized clonezilla live.
+
+The imaging role will setup NFS services between the UEFI PXE client and your `service`
+VM, so you can transfer files that you generate with Clonezilla, utilizing the storage
+space on your developer workstation.
+
+NOTE: The NFS shared with Clonezilla is read-only because of the limitations for chained NFS.
+If you would like to save disks, you can work out how to connect with RW using SSH to one of 
+the VM's, or you can setup a static NFS share on your hypervisor machine for the ./clonezilla
+directory. I usually use SSH because it's easy to setup.
+
+To setup the imaging environment:
+```
+$ vagrant ssh control
+$ make keys
+$ make imaging
+```
+
+Connect your reference VM to the "wizardlab0" network in your virt-manager settings, and do
+a UEFI PXE boot. You can select `Clonezilla Live x86` from the GRUB menu, and save/restore
+disk images to your heart's content.
+
+You could use this system to build a custom imaging pipeline, for example. I have deployed both
+Linux and Windows using a similar system on production systems.
 
 ## Getting Started
 ### Setup libvirt\KVM

@@ -1,6 +1,6 @@
 ---
 - name: configure debian PXE boot files
-  hosts: bridged
+  hosts: services
   become: true
   vars:
     next_server_file: "debian-installer/amd64/bootnetx64.efi"
