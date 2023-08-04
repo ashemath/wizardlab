@@ -1,0 +1,28 @@
+---
+- name: Setup FOG on Services
+  hosts: services
+  become: yes
+
+  tasks:
+  - name: Download the FOG project
+    ansible.builtin.get_url:
+      url: "https://github.com/FOGProject/fogproject/archive/1.5.10.tar.gz"
+      dest: "/root/fogproject-1.5.10.tar.gz"
+      checksum: sha256:2b347772f7d225aac8ee0a1a4c1c140c3e63199a9aecc070fd3b14d88c4f4758
+  - name: Extract FOG
+    ansible.builtin.shell:
+      cmd: "tar xvzf fogproject-1.5.10.tar.gz"
+      chdir:  "/root/"
+  - name: copy over fog install variables
+    ansible.builtin.copy:
+      src: "{{ playbook_dir }}/files/fogsettings"
+      dest: "/root/fogproject-1.5.10/bin/.fogsettings"
+  - name: Install FOG
+    ansible.builtin.shell:
+      cmd: ". ./.fogsettings && ./installfog.sh -y"
+      chdir: "/root/fogproject-1.5.10/bin"
+  - name: Copy binary to tftp
+    ansible.builtin.file:
+      src: /root/fogproject-1.5.10/packages/tftp/snponly.efi
+      dest: /srv/tftp/snponly.efi
+      state: link
