@@ -1,0 +1,70 @@
+- name: remove isc-dhcp-defaults
+  ansible.builtin.file:
+    path: "/etc/default/isc-dhcp-server"
+    state: absent
+- name: remove old dhcpd.conf
+  ansible.builtin.file:
+    path: /etc/dhcp/dhcpd.conf
+    state: absent
+- name: Copy over service defaults
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/pxe/files/etc_default_tftpd-hpa"
+    dest: "/etc/default/tftpd-hpa"
+- name: Copy over service defaults
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/pxe/files/etc_default_isc-dhcp-server"
+    dest: "/etc/default/isc-dhcp-server"
+- name: download debian netboot
+  ansible.builtin.get_url:
+    url: "https://deb.debian.org/debian/dists/bookworm/main/installer-amd64\
+      /current/images/netboot/netboot.tar.gz"
+    dest: "~"
+- name: create tftp root
+  ansible.builtin.file:
+    path: "/srv/tftp"
+    mode: "0755"
+    state: directory
+- name: extract the debian boot files
+  ansible.builtin.shell: 
+    cmd: "tar -xvf ~/netboot.tar.gz -C /srv/tftp/"
+    chdir:  "~"
+- name: Configure dhcp.conf
+  ansible.builtin.template:
+    src: "{{ playbook_dir }}/pxe/templates/pxe_dhcpd.conf.j2"
+    dest: "/etc/dhcp/dhcpd.conf"
+- name: install packages
+  ansible.builtin.apt:
+    pkg:
+      - zip
+      - isc-dhcp-server
+      - tftpd-hpa
+- name: symlink grubx64.efi
+  ansible.builtin.file:
+    src: "/srv/tftp/debian-installer/amd64/grubx64.efi"
+    dest: "/srv/tftp/grubx64.efi"
+    state: link
+- name: symlink grubx64.efi
+  ansible.builtin.file:
+    src: "/srv/tftp/debian-installer/amd64/grub"
+    dest: "/srv/tftp/grub"
+    state: link
+- name: unpack Clonezilla files
+  ansible.builtin.shell:
+    cmd: "unzip -oj /vagrant/clonezilla-live-*.zip live/vmlinuz live/initrd.img \ 
+      live/filesystem.squashfs -d /srv/tftp/live/"
+- name: copy custom files
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/clonezilla/files/"
+    dest: "/srv/tftp/live/"
+- name: Configure grub.cfg
+  ansible.builtin.template:
+    src: "{{ playbook_dir }}/pxe/templates/srv_tftp_grub_grub.cfg.j2"
+    dest: "/srv/tftp/grub/grub.cfg"
+- name: restart PXE services
+  ansible.builtin.service:
+    name: tftpd-hpa
+    state: restarted
+- name: restart PXE services
+  ansible.builtin.service:
+    name: isc-dhcp-server
+    state: restarted

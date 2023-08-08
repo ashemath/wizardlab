@@ -1,0 +1,12 @@
+---
+- name: Deploy netboot.xyz with isc-dhcp-server and tftp-hpa
+  hosts: services
+  become: yes
+  vars:
+    next_server_file: "/netboot.xyz.efi"
+  
+  tasks:
+  - name: deploy isc-dhcp with next server option
+    ansible.builtin.import_tasks: "{{ playbook_dir }}/pxe/tasks/pxe_dhcp_conf.yml"
+  - name: Deploy netboot.xyz
+    ansible.builtin.import_tasks: "{{ playbook_dir }}/pxe/tasks/netbootxyz.yml"

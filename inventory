@@ -1,14 +1,17 @@
+[all:vars]
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
 [controllers]
 control
 
 [infra]
-services dhcp_range='192.168.56.150 192.168.56.254'
+services 
 
 [infra:vars]
 ansible_user='vagrant'
 ansible_password='vagrant'
-dns='8.8.8.8'
+dhcp_range='192.168.56.150 192.168.56.254' 
 router='192.168.56.1'
+dns='8.8.8.8'
 
 [infra:children]
 pxe
@@ -16,7 +19,6 @@ controllers
 
 [pxe]
 services
-
 
 [windows]
 

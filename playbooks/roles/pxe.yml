@@ -1,5 +1,0 @@
----
-- name: Deploy ISC DHCP Server with Next-Server option.
-  ansible.builtin.import_playbook: "{{ playbook_dir }}/pxe/pxe_dhcp_conf.yml"
-- name: Deploy netboot.xyz
-  ansible.builtin.import_playbook: "{{ playbook_dir }}/pxe/netbootxyz.yml"

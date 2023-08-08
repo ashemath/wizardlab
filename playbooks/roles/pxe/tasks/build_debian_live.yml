@@ -1,0 +1,24 @@
+- name: install package
+  ansible.builtin.apt:
+    pkg:
+      - live-build
+- name: create the debian-live directory
+  ansible.builtin.file:
+    path: "/srv/tftp/debian-live/"
+    mode: "0755"
+  state: directory
+- name: config debian-live
+   ansible.builtin.shell:
+     cmd: "lb config \
+       --distribution bookworm \
+       --architectures amd64 \
+       --binary-images netboot \
+       --chroot-filesystem squashfs \
+       --archive-areas 'main non-free contrib' \
+       --apt-options '--force-yes --yes' \
+       --bootappend-live 'keyboard-layouts=en'"
+     chdir: "/srv/tftp/debian-live/"
+- name: Build debian-live
+  ansible.builtin.shell:
+    cmd: "lb build"
+    chdir: "/srv/tftp/debian-live/"

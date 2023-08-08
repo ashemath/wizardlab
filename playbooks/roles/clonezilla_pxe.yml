@@ -1,7 +1,12 @@
 ---
-- name: Deploy Debian PXE Server with Clonezilla-Live
+- name: Deploy Debian PXE with added Clonezilla-live
   hosts: services
-- name: Deploy NFS share for Clonezilla.
-  ansible.builtin.import_playbook: "{{ playbook_dir }}/pxe/clonezilla_nfs.yml"
-- name: Clonezilla based imaging suite
-  ansible.builtin.import_playbook: "{{ playbook_dir }}/pxe/clonezilla_pxe.yml"
+  become: yes
+  vars:
+    next_server_file: "debian-installer/amd64/bootnetx64.efi"
+  
+  tasks:
+  - name: Deploy NFS share for Clonezilla.
+    ansible.builtin.import_tasks: "{{ playbook_dir }}/clonezilla/tasks/clonezilla_nfs.yml"
+  - name: Clonezilla based imaging suite
+    ansible.builtin.import_tasks: "{{ playbook_dir }}/clonezilla/tasks/clonezilla.yml"

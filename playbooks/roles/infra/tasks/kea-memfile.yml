@@ -9,7 +9,7 @@
       state: absent
   - name: Copy over configuration files
     ansible.builtin.copy:
-      src: '{{ playbook_dir }}/files/kea-memfile'
+      src: '{{ playbook_dir }}/infra/files/kea-memfile'
       dest: '/etc/kea/'
   - name: download kea repo setup script
     ansible.builtin.get_url:

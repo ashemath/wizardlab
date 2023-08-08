@@ -1,1 +1,0 @@
-/usr/sbin/ocs-sr -q2 -c -j2 -rm-win-swap-hib -z2 -i 0 -sfsck -scs -senc -p poweroff saveparts win11-img sda1 sda2 sda3 sda4

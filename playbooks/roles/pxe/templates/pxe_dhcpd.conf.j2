@@ -36,6 +36,7 @@ subnet {{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['network'] }} net
   filename "{{ next_server_file }}";
 }
 group{
+  host client { hardware ethernet 52:54:00:ae:4a:d2; fixed-address 192.168.56.10;}
   host win11 { hardware ethernet 52:54:00:00:59:be; fixed-address 192.168.56.10;}
   host win11-pxe { hardware ethernet 52:54:00:4d:1e:e0; fixed-address 192.168.56.11;}
 }
