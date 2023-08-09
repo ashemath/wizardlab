@@ -31,7 +31,7 @@ ansible_winrm_transport="ntlm"
 ansible_winrm_server_cert_validation=ignore
 
 [clonezilla]
-192.168.56.11
+
 [clonezilla:vars]
 ansible_user="user"
 ansible_password="live"
