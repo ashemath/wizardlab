@@ -67,7 +67,7 @@ The services VM is a target for infrastructure configuration. Think of it as a b
 for you to test configuration against. Service knows about controller by its `/etc/hosts`
 
 Playbooks targeting the services VM are found throughout the playbooks, and many of the
-infrasture configurations are just variations on setting up the services VM.
+infrastructure configurations are just variations on setting up the services VM.
 
 ## PXE 
 The PXE make target gives you a simple to setup PXE boot server that allows you to try
