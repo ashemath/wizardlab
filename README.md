@@ -6,10 +6,10 @@ for training and testing purposes.*
 Multi-Machine training environment Vagrantfile
 
 ## Features:
-- Debian Bookworm featuring an XFCE4 desktop 
+-  Multi-Machine Vagrantfile, featuring Debian 12 
 - Control: 2 CPU, 2GB ram, 20GB Virtual Disk
 - Service: 4 CPU, 4GB ram, 20GB Virtual Disk
-- Client: 2 CPU, 2 GB ram, 20GB VIrtual Disk, EFI Boot Client
+- Client: 2 CPU, 4 GB ram, 20GB VIrtual Disk, EFI Boot Client
 
 ## Requirements
 - Linux OS (Need to test on Windows)
@@ -28,7 +28,7 @@ sits on the network 192.168.56.0/24
 
 - Control: 192.168.56.2
 - Service: 192.168.56.3
-- Client: 192.168.56.4
+- Client: 192.168.56.10
 
 ## Architecture
 The project is designed to be a flexible place to setup a fresh environment and test out
@@ -37,12 +37,30 @@ the Client machine is a PXE test machine, for debugging netboot.xyz menus.
 
 ### Control
 The Control host will have a ready to use installation of Ansible in a Python 
-virtual environment at /home/vagrant/ansible. The control host has an XFCE GUI
-for the purpose of testing usability and integrating your work into your "production" workflow.
-Please comment out the line with bootstrap/install_xfce.sh from the Vagrantfile if you
-do not want the GUI.
+virtual environment. Just `vagrant ssh control` to connect to the control VM,
+and `source ansible/bin/activate` to start using Ansible commands.
+For example:
+```
+$ ansible all -i inventory -m ping
+```
 
-Playbooks for Control are located under [playbooks/roles/controller/](playbooks/roles/controller/)
+Output:
+```
+control | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+services | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+```
 
 ### Services
 The services VM is a target for infrastructure configuration. Think of it as a blank slate
