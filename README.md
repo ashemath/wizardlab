@@ -85,9 +85,9 @@ Next, boot up the Client VM on your Host:
 vagrant up client
 ```
 The Client machine is configured to PXE boot, so it will hang on step where it tries to inject
-the SSH key. It will be trying to PXE boot. Open up `virt-manager` and try out the netboot.xyz menus.
-
-If you got the menu working, try setting up a beefier virtual machine from scratch on the 'wizardlab' virtual network.
+the SSH key. It will be trying to PXE boot, so open up `virt-manager` and try out the netboot.xyz menus. The client VM will auto-destruct after an hour as it sits trying to configure SSH.
+I treat this timeout as a feature. I use the 'client' machine soley to test new PXE configuration, and an hour is plenty to see if my grub.cfg does what I need. When the time is up, it cleans up itself.
+If you would like to keep 'client' around, you can always disconnect it's 'vagrant-libvirt' virtual network adapter.
 
 ## Imaging
 The imaging environment gives you a Debian PXE boot server with a Clonezilla Live PXE

@@ -1,0 +1,14 @@
+- name: Import tasks to setup isc-dhcp-server by default
+  ansible.builtin.include_tasks:
+    file: dhcp_conf.yml
+    apply:
+      tags:
+        - "isc-dhcp-server"
+
+- name: Alternatively, setup Kea in a memfile configuration
+  ansible.builtin.include_tasks:
+    file: kea-memfile.yml
+    apply:
+      tags: 
+        - "kea"
+        - "never"  

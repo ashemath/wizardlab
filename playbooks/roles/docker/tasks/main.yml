@@ -1,0 +1,18 @@
+- name: Import the tasks that install just Docker
+  ansible.builtin.include_tasks:
+    file: "setup_docker.yml"
+    apply:
+      tags:
+        - always
+        - docker
+  tags:
+    - always
+
+- name: Import the tasks that install Docker Compose
+  ansible.builtin.include_tasks:
+    file: "setup_compose.yml"
+    apply:
+      tags:
+        - compose
+  tags:
+    - compose

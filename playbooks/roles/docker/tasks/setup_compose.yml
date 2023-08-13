@@ -1,0 +1,7 @@
+- name: Install the docker compose plugin
+  ansible.builtin.apt:
+    pkg: docker-compose-plugin
+    state: present
+- name: Celebrate the docker compose task running
+  ansible.builtin.debug:
+    msg: "docker compose task"

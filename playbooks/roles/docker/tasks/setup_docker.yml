@@ -1,0 +1,57 @@
+- name: remove conflicting packages
+  ansible.builtin.apt:
+    pkg:
+      - docker.io 
+      - docker-doc
+      - docker-compose
+      - podman-docker
+      - containerd
+      - runc
+    state: absent
+- name: install the docker repo only if needed
+  block:
+    - name: check if the we have the repo already configured
+      ansible.builtin.stat:
+        path: "/etc/apt/sources.list.d/docker.list"
+      register: docker_repo_stat
+    - name: fail if docker.list isn't configured.
+      ansible.builtin.fail:
+        msg: "docker repo is not configured"
+      when: docker_repo_stat["stat"]["exists"]==false
+  rescue:
+    - name: ensure I have the dependecy packages to setup the repo
+      ansible.builtin.apt:
+        pkg:
+          - ca-certificates
+          - curl
+          - gnupg
+        state: present
+    - name: remove the old gpg key if it already exists
+      ansible.builtin.file:
+        path: "/etc/apt/keyrings/docker.gpg"
+        state: absent
+
+    - name: grab the official GPG key
+      ansible.builtin.shell:
+        cmd: "install -m 0755 -d /etc/apt/keyrings; \
+          curl -fsSL https://download.docker.com/linux/debian/gpg | \
+          gpg --dearmor -o /etc/apt/keyrings/docker.gpg"
+
+    - name: configure docker repo
+      ansible.builtin.copy:
+        src: "docker.list"
+        dest: "/etc/apt/sources.list.d/docker.list"
+
+- name: install docker packages
+  ansible.builtin.apt:
+    pkg:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+    update_cache: true
+    state: present
+
+- name: Celebrate docker tasks being finished
+  ansible.builtin.debug:
+    msg: "Docker setup tasks finished"
