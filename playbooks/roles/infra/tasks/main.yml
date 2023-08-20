@@ -1,3 +1,10 @@
+- name: Import tasks that setup BIND9 DNS
+  ansible.builtin.include_tasks:
+    file: setup_bind.yml
+    apply:
+      tags:
+        - "always"
+
 - name: Import tasks to setup isc-dhcp-server by default
   ansible.builtin.include_tasks:
     file: dhcp_conf.yml

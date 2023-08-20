@@ -1,0 +1,19 @@
+---
+- name: Windows imaging
+  hosts: clonezilla
+  become: true
+
+  tasks:
+  - name: identify the first drive
+    ansible.builtin.shell: "echo /dev/$(lsblk --list | grep 'disk' | head -n1 | cut -d' ' -f1)"
+    register: first_disk
+  - name: create the appropriate partition table
+    ansible.builtin.template:
+      src: "{{ playbook_dir }}/templates/disk0.sf.j2"
+      dest: "/tmp/disk0.sf"
+  - name: partition the first disk
+    ansible.builtin.shell:
+      cmd: "sfdisk {{ first_disk['stdout'] }} < /tmp/disk0.sf"
+  - name: start the restore
+    ansible.builtin.shell:
+      cmd: "/usr/sbin/ocs-sr -b -g auto -e1 auto -e2 -j2 -srel -k -scr restoredisk win11 sda"

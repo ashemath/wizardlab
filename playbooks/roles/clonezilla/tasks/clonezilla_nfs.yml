@@ -9,12 +9,14 @@
     owner: "root"
     group: "root"
     mode: 0755
+
 - name: Add relevant nfs configuration.
   ansible.builtin.lineinfile:
     path: "/etc/exports"
     line: "/vagrant/clonezilla \
-      192.168.56.0/24(rw,fsid='1',sync,no_root_squash,no_subtree_check)"
+      192.168.56.0/24(rw,fsid=1,sync,no_root_squash,no_subtree_check)"
     state: present
+
 - name: Restart the nfs service
   ansible.builtin.service:
     name: nfs-kernel-server

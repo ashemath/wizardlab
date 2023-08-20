@@ -54,7 +54,7 @@
       live/filesystem.squashfs -d /srv/tftp/live/"
 - name: copy custom files
   ansible.builtin.copy:
-    src: "{{ playbook_dir }}/clonezilla/files/"
+    src: "{{ playbook_dir }}/pxe/files/clonezilla/"
     dest: "/srv/tftp/live/"
 - name: Configure grub.cfg
   ansible.builtin.template:
