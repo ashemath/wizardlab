@@ -1,10 +1,10 @@
 - name: Git clone wizardlab-bind9
   ansible.builtin.git:
     repo: "https://github.com/ashemath/wizardlab-bind9.git"
-    dest: "/home/vagrant/wizardlab-bind9"
+    dest: "/vagrant/wizardlab-bind9"
     force: yes
 
 - name: Deploy and start the BIND9 server
   ansible.builtin.shell:
     cmd: "docker compose up -d"
-    chdir: "/home/vagrant/wizardlab-bind9"
+    chdir: "/vagrant/wizardlab-bind9"

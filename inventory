@@ -11,7 +11,7 @@ ansible_user='vagrant'
 ansible_password='vagrant'
 dhcp_range='192.168.56.150 192.168.56.254' 
 router='192.168.56.1'
-dns='8.8.8.8'
+dns='192.168.56.3'
 
 [infra:children]
 pxe

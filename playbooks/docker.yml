@@ -4,13 +4,12 @@
   become: yes
 
   tasks:  
-  - name: include infra
-    ansible.builtin.include_role:
-      name: infra
   - name: include docker
     ansible.builtin.include_role:
       name: docker
     tags:
       - docker
       - always
-
+  - name: include infra
+    ansible.builtin.include_role:
+      name: infra

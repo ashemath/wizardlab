@@ -68,9 +68,9 @@ Vagrant.configure("2") do |config|
       v.memory = 2048
       v.cpus = 2
       # For redhat: path with edk2
-      #v.loader = "/usr/share/edk2/ovmf/OVMF_CODE.fd"
+      v.loader = "/usr/share/edk2/ovmf/OVMF_CODE.fd"
       # For Ubuntu\Debian
-      v.loader = "/usr/share/ovmf/OVMF.fd"
+      #v.loader = "/usr/share/ovmf/OVMF.fd"
       boot_network = {'network' => 'wizardlab0'}
       v.boot boot_network
       v.boot 'hd'
@@ -94,8 +94,7 @@ Vagrant.configure("2") do |config|
     echo vagrant:vagrant | chpasswd
     sed -i 's/PasswordAuthentication\ no//' /etc/ssh/sshd_config
     systemctl restart sshd
-    apt update && apt upgrade -y
-    apt install -y htop tmux vim
+    apt install -y git htop tmux vim
     echo '192.168.56.2 control' >> /etc/hosts
     echo '192.168.56.3 services' >> /etc/hosts
     echo '192.168.56.4 client' >> /etc/hosts
