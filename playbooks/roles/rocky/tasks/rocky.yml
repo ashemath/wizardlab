@@ -3,10 +3,21 @@
     name: nginx
     state: present
 
+- name: Deploy port 8080 nginx default.conf
+  ansible.builtin.copy:
+    src: "files/default.conf"
+    dest: "/etc/nginx/conf.d/default.conf"
+
+- name: Restart nginx
+  ansible.builtin.service:
+    name: nginx
+    state: restarted
+
 - name: Copy anaconda-ks.cfg to the html directory
   ansible.builtin.copy:
     src: "files/anaconda-ks.cfg"
     dest: "/usr/share/nginx/html/"
+    mode: "0755"
 
 - name: remove isc-dhcp-defaults
   ansible.builtin.file:
@@ -60,7 +71,6 @@
     dest: "/srv/tftp/rocky9/{{ item }}"
   loop:
     - BOOTX64.EFI
-    - grub.cfg
     - grubx64.efi
     - mmx64.efi
       
