@@ -1,0 +1,10 @@
+---
+- name: Deploy Debian PXE with added Clonezilla-live
+  hosts: services
+  become: yes
+  vars:
+    next_server_file: "debian-installer/amd64/bootnetx64.efi"
+  
+  tasks:
+  - name: Rocky PXE Boot
+    ansible.builtin.import_tasks: "{{ playbook_dir }}/rocky/tasks/rocky.yml"

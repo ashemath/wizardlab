@@ -1,0 +1,108 @@
+- name: Install lazy nginx server
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+- name: remove isc-dhcp-defaults
+  ansible.builtin.file:
+    path: "/etc/default/isc-dhcp-server"
+    state: absent
+- name: remove old dhcpd.conf
+  ansible.builtin.file:
+    path: /etc/dhcp/dhcpd.conf
+    state: absent
+- name: Copy over service defaults
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/pxe/files/etc_default_tftpd-hpa"
+    dest: "/etc/default/tftpd-hpa"
+- name: Copy over service defaults
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/pxe/files/etc_default_isc-dhcp-server"
+    dest: "/etc/default/isc-dhcp-server"
+- name: download file
+  ansible.builtin.get_url:
+    url: "https://download.rockylinux.org/pub/rocky/9/BaseOS/x86_64/os/images/pxeboot/vmlinuz"
+    dest: "~"
+- name: download file
+  ansible.builtin.get_url:
+    url: "https://download.rockylinux.org/pub/rocky/9/BaseOS/x86_64/os/images/pxeboot/initrd.img"
+    dest: "~"
+- name: create tftp root
+  ansible.builtin.file:
+    path: "/srv/tftp"
+    mode: "0755"
+    state: directory
+- name: ensure rocky9 tftp folder
+  ansible.builtin.file:
+    path: "/srv/tftp/live/rocky9"
+    mode: "0775"
+    state: directory
+- name: copy boot files
+  ansible.builtin.copy:
+    src: "~/{{ item }}"
+    dest: "/srv/tftp/live/rocky9/{{ item }}"
+    remote_src: true
+  loop:
+    - vmlinuz
+    - initrd.img
+- name: Create mount folder for DVD
+  ansible.builtin.file:
+    path: "/mnt/Rocky9"
+    state: directory
+- name: Mount the Rocky DVD
+  ansible.posix.mount:
+    src: "/vagrant/Rocky-9.iso"
+    path: "/mnt/Rocky9"
+    opts: ro
+    fstype: iso9660
+    state: mounted
+- name: Ensure deploy directory for Rocky OS DVD
+  ansible.builtin.file:
+    path: "/var/www/html/deploy"
+    mode: "0755"
+    state: directory
+- name: Copy the DVD Files for Installation
+  ansible.builtin.copy:
+    src: "/mnt/Rocky9"
+    dest: "/var/www/html/deploy/"
+    remote_src: true
+- name: download debian netboot
+  ansible.builtin.get_url:
+    url: "https://deb.debian.org/debian/dists/bookworm/main/installer-amd64\
+      /current/images/netboot/netboot.tar.gz"
+    dest: "~"
+- name: extract the debian boot files
+  ansible.builtin.shell: 
+    cmd: "tar -xvf ~/netboot.tar.gz -C /srv/tftp/"
+    chdir:  "~"
+- name: Configure dhcp.conf
+  ansible.builtin.template:
+    src: "{{ playbook_dir }}/pxe/templates/pxe_dhcpd.conf.j2"
+    dest: "/etc/dhcp/dhcpd.conf"
+- name: install packages
+  ansible.builtin.apt:
+    pkg:
+      - zip
+      - isc-dhcp-server
+      - tftpd-hpa
+- name: symlink grubx64.efi
+  ansible.builtin.file:
+    src: "/srv/tftp/debian-installer/amd64/grubx64.efi"
+    dest: "/srv/tftp/grubx64.efi"
+    state: link
+- name: symlink grubx64.efi
+  ansible.builtin.file:
+    src: "/srv/tftp/debian-installer/amd64/grub"
+    dest: "/srv/tftp/grub"
+    state: link
+- name: Configure grub.cfg
+  ansible.builtin.template:
+    src: "{{ playbook_dir }}/rocky/templates/srv_tftp_grub_grub.cfg.j2"
+    dest: "/srv/tftp/grub/grub.cfg"
+- name: restart PXE services
+  ansible.builtin.service:
+    name: tftpd-hpa
+    state: restarted
+- name: restart PXE services
+  ansible.builtin.service:
+    name: isc-dhcp-server
+    state: restarted
