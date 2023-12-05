@@ -15,23 +15,13 @@
 
 - name: Copy over service defaults
   ansible.builtin.copy:
-    src: "{{ playbook_dir }}/pxe/files/etc_default_tftpd-hpa"
+    src: "{{ playbook_dir }}/rocky/files/etc_default_tftpd-hpa"
     dest: "/etc/default/tftpd-hpa"
 
 - name: Copy over service defaults
   ansible.builtin.copy:
     src: "{{ playbook_dir }}/pxe/files/etc_default_isc-dhcp-server"
     dest: "/etc/default/isc-dhcp-server"
-
-- name: download file
-  ansible.builtin.get_url:
-    url: "https://download.rockylinux.org/pub/rocky/9/BaseOS/x86_64/os/images/pxeboot/vmlinuz"
-    dest: "~"
-
-- name: download file
-  ansible.builtin.get_url:
-    url: "https://download.rockylinux.org/pub/rocky/9/BaseOS/x86_64/os/images/pxeboot/initrd.img"
-    dest: "~"
 
 - name: create tftp root
   ansible.builtin.file:
@@ -41,57 +31,50 @@
 
 - name: ensure rocky9 tftp folder
   ansible.builtin.file:
-    path: "/srv/tftp/live/rocky9/fonts"
+    path: "/srv/tftp/rocky9/"
     mode: "0755"
-    recurse: true
+    state: directory
+
+- name: ensure pxe images folder
+  ansible.builtin.file:
+    path: "/srv/tftp/rocky9/images/pxeboot"
+    mode: "0755"
     state: directory
 
 - name: download boot files
-  ansible.builtin.gut_url:
+  ansible.builtin.get_url:
     url: "{{ rocky_img_url }}/{{ item }}"
-    dest: "/srv/tftp/rocky9/{{ item }}"
+    dest: "/srv/tftp/rocky9/images/pxeboot/{{ item }}"
   loop:
     - vmlinuz
     - initrd.img
 
-- name: download boot files
-  ansible.builtin.gut_url:
-    url: "{{ rocky_img_url }}/{{ item }}"
+- name: download ks files
+  ansible.builtin.get_url:
+    url: "{{ rocky_ks_url }}/{{ item }}"
     dest: "/srv/tftp/rocky9/{{ item }}"
   loop:
-    - vmlinuz
-    - initrd.img
-
-
+    - BOOTX64.EFI
+    - grub.cfg
+    - grubx64.efi
+    - mmx64.efi
       
 - name: Configure dhcp.conf
   ansible.builtin.template:
     src: "{{ playbook_dir }}/pxe/templates/pxe_dhcpd.conf.j2"
     dest: "/etc/dhcp/dhcpd.conf"
-- name: install packages
+
+- name: Ensure dhcp and tftpd are installed
   ansible.builtin.apt:
     pkg:
-      - zip
       - isc-dhcp-server
       - tftpd-hpa
-- name: symlink grubx64.efi
-  ansible.builtin.file:
-    src: "/srv/tftp/debian-installer/amd64/grubx64.efi"
-    dest: "/srv/tftp/grubx64.efi"
-    state: link
-- name: symlink grubx64.efi
-  ansible.builtin.file:
-    src: "/srv/tftp/debian-installer/amd64/grub"
-    dest: "/srv/tftp/grub"
-    state: link
-- name: Configure grub.cfg
-  ansible.builtin.template:
-    src: "{{ playbook_dir }}/rocky/templates/srv_tftp_grub_grub.cfg.j2"
-    dest: "/srv/tftp/grub/grub.cfg"
+
 - name: restart PXE services
   ansible.builtin.service:
     name: tftpd-hpa
     state: restarted
+
 - name: restart PXE services
   ansible.builtin.service:
     name: isc-dhcp-server

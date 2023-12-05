@@ -1,0 +1,6 @@
+# /etc/default/tftpd-hpa
+
+TFTP_USERNAME="root"
+TFTP_DIRECTORY="/srv/tftp/rocky9"
+TFTP_ADDRESS=":69"
+TFTP_OPTIONS="--secure --verbosity 4"
