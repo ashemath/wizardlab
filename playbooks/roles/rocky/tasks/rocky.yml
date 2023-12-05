@@ -3,6 +3,11 @@
     name: nginx
     state: present
 
+- name: Copy anaconda-ks.cfg to the html directory
+  ansible.builtin.copy:
+    src: "files/anaconda-ks.cfg"
+    dest: "/usr/share/nginx/html/"
+
 - name: remove isc-dhcp-defaults
   ansible.builtin.file:
     path: "/etc/default/isc-dhcp-server"
