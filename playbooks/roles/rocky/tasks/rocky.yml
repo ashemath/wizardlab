@@ -5,7 +5,7 @@
 
 - name: Deploy port 8080 nginx default.conf
   ansible.builtin.copy:
-    src: "files/default.conf"
+    src: "nginx_default.conf"
     dest: "/etc/nginx/conf.d/default.conf"
 
 - name: Restart nginx
@@ -15,7 +15,7 @@
 
 - name: Copy anaconda-ks.cfg to the html directory
   ansible.builtin.copy:
-    src: "files/anaconda-ks.cfg"
+    src: "anaconda-ks.cfg"
     dest: "/usr/share/nginx/html/"
     mode: "0755"
 
@@ -73,6 +73,11 @@
     - BOOTX64.EFI
     - grubx64.efi
     - mmx64.efi
+
+- name: Copy grub.cfg PXE menu
+  ansible.builtin.copy:
+    src: "grub.cfg"
+    dest: "/srv/tftp/rocky9/grub.cfg"
       
 - name: Configure dhcp.conf
   ansible.builtin.template:
