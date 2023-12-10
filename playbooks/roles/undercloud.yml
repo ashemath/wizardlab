@@ -1,0 +1,7 @@
+---
+- name: Bootstrap OS configuration for OpenStack  
+  hosts: rocky_pxe
+  become: yes
+  
+  roles:
+    - undercloud

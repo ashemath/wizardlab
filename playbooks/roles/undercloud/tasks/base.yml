@@ -1,0 +1,15 @@
+- name: Set hostname
+  ansible.builtin.hostname: 
+    name: "{{ inventory_hostname }}"
+    use: systemd
+
+- name: Set static IP from dhcp reservation
+  community.general.nmcli:
+    type: ethernet
+    conn_name: "default"
+    ifname: "{{ ansible_default_ipv4.interface }}"
+    ip4: "{{ ansible_default_ipv4.address }}"
+    gw4: "{{ ansible_default_ipv4.gateway }}"
+    dns4: "{{ ansible_dns.nameservers }}"
+    state: present
+

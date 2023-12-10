@@ -1,0 +1,3 @@
+- name: Include base system configuration
+  ansible.builtin.import_tasks:
+    file: base.yml

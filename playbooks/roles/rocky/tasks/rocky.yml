@@ -81,8 +81,16 @@
       
 - name: Configure dhcp.conf
   ansible.builtin.template:
-    src: "{{ playbook_dir }}/pxe/templates/pxe_dhcpd.conf.j2"
+    src: "pxe_dhcpd.conf.j2"
     dest: "/etc/dhcp/dhcpd.conf"
+
+- name: Add rocky_pxe dhcp reservations
+  ansible.builtin.lineinfile:
+    path: "/etc/dhcp/dhcpd.conf"
+    insertafter: "group{"
+    line: "  host {{ item.key }} { hardware ethernet {{ item.value.mac_address }}; fixed-address {{ item.value.ip_address }};}"
+    state: present
+  with_dict: "{{ rocky_pxe }}"
 
 - name: Ensure dhcp and tftpd are installed
   ansible.builtin.apt:

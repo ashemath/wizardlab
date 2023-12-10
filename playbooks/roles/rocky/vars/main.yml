@@ -1,3 +1,14 @@
 rocky_ks_url: "https://download.rockylinux.org/pub/rocky/9/BaseOS/x86_64/kickstart/EFI/BOOT/"
 rocky_img_url: "https://download.rockylinux.org/pub/rocky/9/BaseOS/x86_64/os/images/pxeboot/"
 next_server_file: "grubx64.efi"
+
+rocky_pxe:
+  node0:
+    ip_address: "192.168.56.12"
+    mac_address: "de:ad:be:ef:00:00"
+  node1:
+    ip_address: "192.168.56.13"
+    mac_address: "de:ad:be:ef:00:01"
+  node2:
+    ip_address: "192.168.56.14"
+    mac_address: "de:ad:be:ef:00:02"
