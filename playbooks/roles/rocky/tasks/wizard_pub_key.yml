@@ -1,0 +1,12 @@
+- name: read the lab pub key and set to wizard_pub_key
+  ansible.builtin.script:
+    cmd: "echo_pub.sh"
+    chdir: "/home/{{ ansible_user }}/.ssh"
+  register: wizard_pub_key
+  delegate_to: localhost
+  run_once: true
+
+- name: debug
+  debug:
+    msg: "{{ wizard_pub_key.stdout }}"
+

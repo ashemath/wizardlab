@@ -1,0 +1,2 @@
+zone "wizardlab.test"	{ type primary; file "/etc/bind/primary/wizardlab.test.db"; };
+zone "56.168.192.in-addr.arpa"	{ type primary; file "/etc/bind/primary/wizardlab.test.db"; allow-update { none; }; };

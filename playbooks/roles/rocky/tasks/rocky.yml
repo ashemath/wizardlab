@@ -14,7 +14,7 @@
     state: restarted
 
 - name: Copy anaconda-ks.cfg to the html directory
-  ansible.builtin.copy:
+  ansible.builtin.template:
     src: "anaconda-ks.cfg"
     dest: "/usr/share/nginx/html/"
     mode: "0755"

@@ -58,7 +58,7 @@ Vagrant.configure("2") do |config|
    end
 
   config.vm.define "bridged", autostart: false do |bridged|
-    bridged.vm.network :public_network, mode: "bridge", :dev => 'wlp3s0'
+    bridged.vm.network :public_network, mode: "bridge", :dev => 'wlp0s20f3'
     bridged.vm.provider :libvirt do |v|
       v.nested = true
       v.channel :type => 'unix', :target_type => 'virtio', :target_name => 'org.qemu.guest_agent.0'
@@ -81,9 +81,9 @@ Vagrant.configure("2") do |config|
       v.memory = 4096
       v.cpus = 2
       # For redhat: path with edk2
-      #v.loader = "/usr/share/edk2/ovmf/OVMF_CODE.fd"
+      v.loader = "/usr/share/edk2/ovmf/OVMF_CODE.fd"
       # For Ubuntu\Debian
-      v.loader = "/usr/share/ovmf/OVMF.fd"
+      #v.loader = "/usr/share/ovmf/OVMF.fd"
       boot_network = {'network' => 'wizardlab0'}
       v.boot boot_network
       v.boot 'hd'

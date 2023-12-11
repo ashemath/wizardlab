@@ -4,6 +4,17 @@
   become: yes
   
   tasks:
+  - name: include docker
+    ansible.builtin.include_role:
+      name: docker
+    tags:
+      - docker
+      - always
+
+  - name: Rocky PXE Boot
+    ansible.builtin.import_role:
+      name: infra
+
   - name: Rocky PXE Boot
     ansible.builtin.import_role:
       name: rocky

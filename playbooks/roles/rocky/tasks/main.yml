@@ -1,3 +1,6 @@
+- name: include ssh-key task
+  ansible.builtin.include_tasks:
+    file: "wizard_pub_key.yml" 
 - name: Include Rocky tasks
   ansible.builtin.include_tasks:
     file: "rocky.yml"

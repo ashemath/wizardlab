@@ -1,0 +1,10 @@
+---
+- name: wipe data disks
+  hosts: rocky_pxe
+  become: yes
+
+  tasks:
+    - name: include the wipe bonus disk tasks
+      ansible.builtin.import_tasks:
+        file: "roles/undercloud/tasks/clear_data_disks.yml"
+

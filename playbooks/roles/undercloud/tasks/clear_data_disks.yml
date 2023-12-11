@@ -1,0 +1,3 @@
+- name: wipe the bonus disk
+  ansible.builtin.command:
+    cmd: "wipefs -a --force /dev/vdb"

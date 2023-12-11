@@ -1,11 +1,11 @@
 ---
 - name: Deploying dhcpd.conf
   ansible.builtin.template:
-    src: "{{ playbook_dir }}/roles/infra/templates/dhcpd.conf.j2"
+    src: "dhcpd.conf.j2"
     dest: "/etc/dhcp/dhcpd.conf"
 - name: copy dhcp defaults (eth1 and ipv4 only)
   ansible.builtin.copy:
-    src: "{{ playbook_dir }}/roles/infra/files/etc_defaults_isc-dhcp-server"
+    src: "etc_defaults_isc-dhcp-server"
     dest: "/etc/default/isc-dhcp-server"
 - name: install dependencies
   ansible.builtin.apt:
