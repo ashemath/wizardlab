@@ -90,6 +90,7 @@ Vagrant.configure("2") do |config|
   # Labwide privileged commands (USER=root)
   config.vm.provision "shell", inline: <<-SHELL
     #sh /vagrant/grow-root.sh
+    apt-get update
     echo vagrant:vagrant | chpasswd
     sed -i 's/PasswordAuthentication\ no//' /etc/ssh/sshd_config
     apt install -y htop tmux vim
